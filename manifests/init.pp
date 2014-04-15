@@ -3,16 +3,35 @@
 #
 # Examples
 #
-#   include macvim
-class macvim {
+#   class { 'macvim':
+#     custom_icons => true,
+#   }
+class macvim (
+  $custom_icons = false,
+  $lua          = false,
+) {
   case $::osfamily {
     'Darwin': {
-      package { 'macvim':
-        ensure          => installed,
-        install_options => [
+      $opt_custom_icons = $custom_icons ? {
+        true    => [ '--custom-icons' ],
+        default => [],
+      }
+      $opt_lua = $lua ? {
+        true    => [ '--with-lua', '--with-luajit' ],
+        default => [],
+      }
+      $opt_base = [
           '--with-cscope',
           '--override-system-vim',
-          ];
+      ]
+      $install_options = flatten([
+        $opt_base,
+        $opt_custom_icons,
+        $opt_lua
+      ])
+      package { 'macvim':
+        ensure          => installed,
+        install_options => $install_options,
       }
     }
 
