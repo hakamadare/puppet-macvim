@@ -4,9 +4,11 @@
 # Examples
 #
 #   class { 'macvim':
+#     ensure => 'latest',
 #     custom_icons => true,
 #   }
 class macvim (
+  $ensure       = 'installed',
   $custom_icons = false,
   $lua          = false,
 ) {
@@ -30,7 +32,7 @@ class macvim (
         $opt_lua
       ])
       package { 'macvim':
-        ensure          => installed,
+        ensure          => $ensure,
         install_options => $install_options,
       }
     }
