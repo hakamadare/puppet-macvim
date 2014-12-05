@@ -3,12 +3,16 @@
 #
 # Examples
 #
-#   include macvim
-class macvim {
+#   class { 'macvim':
+#     ensure => 'latest',
+#   }
+class macvim (
+  $ensure = 'installed'
+) {
   case $::osfamily {
     'Darwin': {
       package { 'macvim':
-        ensure          => installed,
+        ensure          => $ensure,
         install_options => [
           '--with-cscope',
           '--override-system-vim',
